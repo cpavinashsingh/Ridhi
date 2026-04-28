@@ -1,14 +1,12 @@
 import { io } from 'socket.io-client';
 
 const getSocketUrl = () => {
+  // Production: use environment variable pointing to Railway backend
   if (import.meta.env.VITE_SOCKET_URL) {
     return import.meta.env.VITE_SOCKET_URL;
   }
 
-  if (import.meta.env.PROD) {
-    return window.location.origin;
-  }
-
+  // Development: use localhost
   return 'http://localhost:5000';
 };
 

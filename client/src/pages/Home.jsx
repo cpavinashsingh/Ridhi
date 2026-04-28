@@ -6,26 +6,16 @@ const Home = () => {
           <h1 className="romantic-title text-7xl font-bold leading-[1.1] tracking-tight text-rose-50 sm:text-8xl">
             Hi Ridhi ✨
           </h1>
-          <div className="mt-8 space-y-6">
-            <p className="text-2xl text-rose-100">
-              This space is made entirely for you.
-            </p>
+          <div className="mt-10 space-y-5">
+            <p className="text-2xl font-semibold text-rose-100">This little corner of the internet is only yours.</p>
             <p className="text-lg leading-relaxed text-rose-100/85">
-              Where every message is special,<br />
-              every conversation matters,<br />
-              and you're always my priority.
+              Every message here is a warm hug,
+              <br />
+              every word is written with love,
+              <br />
+              and every moment feels brighter with you.
             </p>
-            <p className="mt-8 text-xl font-semibold text-pink-300">
-              💌 Let's chat whenever you want 💌
-            </p>
-          </div>
-          <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <a
-              href="#chat"
-              className="rounded-full bg-gradient-to-r from-rose-300 to-pink-300 px-8 py-3 font-semibold text-rose-950 shadow-lg shadow-rose-500/30 transition hover:shadow-rose-500/50"
-            >
-              Start Chatting
-            </a>
+            <p className="pt-2 text-xl font-semibold text-pink-300">You are my favorite notification, always. 💖</p>
           </div>
         </div>
       </section>

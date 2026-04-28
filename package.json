@@ -6,9 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
-    "postinstall": "npm --prefix client install",
-    "build:client": "npm --prefix client run build",
-    "build": "npm run build:client"
+    "postinstall": "npm --prefix client install"
   },
   "keywords": [
     "express",

@@ -1,14 +1,12 @@
 import axios from 'axios';
 
 const getApiBaseUrl = () => {
+  // Production: use environment variable pointing to Railway backend
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
 
-  if (import.meta.env.PROD) {
-    return '/api';
-  }
-
+  // Development: use localhost
   return 'http://localhost:5000/api';
 };
 

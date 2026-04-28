@@ -1,7 +1,14 @@
-require('dotenv').config();
-
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
+
+// Load .env in non-production environments and only if file exists
+if (process.env.NODE_ENV !== 'production') {
+  const envPath = path.join(__dirname, '..', '.env');
+  if (fs.existsSync(envPath)) {
+    require('dotenv').config({ path: envPath });
+  }
+}
 const cors = require('cors');
 const http = require('http');
 
@@ -45,7 +52,9 @@ initializeSocket(server);
 
 const startServer = async () => {
   server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(
+      `Server running on port ${PORT} (mode=${process.env.NODE_ENV || 'development'})`
+    );
   });
 
   const mongoUri = process.env.MONGO_URI;
@@ -73,3 +82,12 @@ const startServer = async () => {
 };
 
 startServer();
+
+// Global error handlers to avoid silent crashes
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown:', err);
+});
