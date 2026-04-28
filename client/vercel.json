@@ -3,8 +3,8 @@
   "outputDirectory": "dist",
   "devCommand": "npm run dev",
   "framework": "vite",
-  "env": [
-    "VITE_API_URL",
-    "VITE_SOCKET_URL"
-  ]
+  "env": {
+    "VITE_API_URL": "@vite_api_url",
+    "VITE_SOCKET_URL": "@vite_socket_url"
+  }
 }
