@@ -20,6 +20,7 @@ const initializeSocket = require('./socket');
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
 const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+const hasClientBuild = fs.existsSync(clientDistPath);
 const allowedOrigins = (process.env.CLIENT_URL || process.env.CORS_ORIGIN || '')
   .split(',')
   .map((origin) => origin.trim())
@@ -35,7 +36,7 @@ app.use(express.json());
 
 app.use('/api', apiRoutes);
 
-if (isProduction) {
+if (isProduction && hasClientBuild) {
   app.use(express.static(clientDistPath));
   app.get('*', (_req, res) => {
     res.sendFile(path.join(clientDistPath, 'index.html'));
