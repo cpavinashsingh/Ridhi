@@ -7,6 +7,12 @@
   NODE_VERSION = "22.22.0"
 
 [[redirects]]
+  from = "/api/*"
+  to = "https://ridhi-chat-backend.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

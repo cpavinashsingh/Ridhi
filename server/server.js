@@ -21,8 +21,10 @@ const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
 const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
 const hasClientBuild = fs.existsSync(clientDistPath);
-const allowedOrigins = (process.env.CLIENT_URL || process.env.CORS_ORIGIN || '')
-  .split(',')
+const allowedOrigins = [
+  ...(process.env.CLIENT_URL || '').split(','),
+  ...(process.env.CORS_ORIGIN || '').split(',')
+]
   .map((origin) => origin.trim())
   .filter(Boolean);
 
