@@ -1,6 +1,11 @@
 import axios from 'axios';
 
 const getApiBaseUrl = () => {
+  // On Netlify, always use same-origin proxy to avoid CORS/env mismatches.
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('netlify.app')) {
+    return '/api';
+  }
+
   // Prefer explicit env var when provided.
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
