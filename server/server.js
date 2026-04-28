@@ -35,6 +35,13 @@ app.use(
 app.use(express.json());
 
 app.use('/api', apiRoutes);
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Ridhi backend is running',
+    health: '/api/health'
+  });
+});
 
 if (isProduction && hasClientBuild) {
   app.use(express.static(clientDistPath));
