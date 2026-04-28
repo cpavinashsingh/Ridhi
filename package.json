@@ -1,0 +1,33 @@
+{
+  "name": "express-modular-backend",
+  "version": "1.0.0",
+  "description": "Node.js + Express modular backend with MongoDB",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "postinstall": "npm --prefix client install",
+    "build:client": "npm --prefix client run build",
+    "build": "npm run build:client"
+  },
+  "keywords": [
+    "express",
+    "mongoose",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.6.3",
+    "nodemailer": "^8.0.7",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

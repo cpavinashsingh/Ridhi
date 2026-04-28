@@ -1,0 +1,5 @@
+const ADMIN_CHAT_USER_ID = '000000000000000000000001';
+
+module.exports = {
+  ADMIN_CHAT_USER_ID
+};
