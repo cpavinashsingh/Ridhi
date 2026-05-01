@@ -58,7 +58,11 @@ const Signup = () => {
       });
       setStep(2);
     } catch (submissionError) {
-      setError(submissionError?.response?.data?.message || 'Failed to send OTP');
+      setError(
+        submissionError?.response?.data?.message ||
+          submissionError?.message ||
+          'Failed to send OTP'
+      );
     } finally {
       setLoading(false);
     }
