@@ -11,6 +11,7 @@ const otpStore = new Map();
 const verifiedSignupStore = new Map();
 
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
+const OTP_MAIL_TIMEOUT_MS = Number(process.env.OTP_MAIL_TIMEOUT_MS || 12000);
 
 const signToken = (payload) => {
   const jwtSecret = process.env.JWT_SECRET;
@@ -166,12 +167,31 @@ const sendOTP = async (req, res, next) => {
 
     const smtpConfigured = Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
     if (smtpConfigured) {
-      await sendMail({
-        to: normalizedEmail,
-        subject: 'Your OTP for signup',
-        text: `Your OTP is: ${otp}\n\nThis OTP expires in 5 minutes.`,
-        html: `<p>Your OTP is:</p><p style="font-size: 24px; font-weight: 700; letter-spacing: 2px;">${otp}</p><p>This OTP expires in 5 minutes.</p>`
-      });
+      try {
+        // Fail fast if SMTP hangs, so proxies don't return generic 504/502.
+        await Promise.race([
+          sendMail({
+            to: normalizedEmail,
+            subject: 'Your OTP for signup',
+            text: `Your OTP is: ${otp}\n\nThis OTP expires in 5 minutes.`,
+            html: `<p>Your OTP is:</p><p style="font-size: 24px; font-weight: 700; letter-spacing: 2px;">${otp}</p><p>This OTP expires in 5 minutes.</p>`
+          }),
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(new Error('Email service timeout while sending OTP')),
+              OTP_MAIL_TIMEOUT_MS
+            )
+          )
+        ]);
+      } catch (mailError) {
+        return res.status(503).json({
+          success: false,
+          message:
+            mailError.message === 'Email service timeout while sending OTP'
+              ? 'OTP email timed out. Please try again in a moment.'
+              : 'OTP email service is unavailable. Please try again later.'
+        });
+      }
     } else {
       console.log(
         `[Mock Email] SMTP not configured. OTP for ${normalizedEmail}: ${otp}`
