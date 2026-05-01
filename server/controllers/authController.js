@@ -13,6 +13,19 @@ const verifiedSignupStore = new Map();
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
 const OTP_MAIL_TIMEOUT_MS = Number(process.env.OTP_MAIL_TIMEOUT_MS || 12000);
 
+const redactEmailAddress = (value) => {
+  if (!value || typeof value !== 'string') {
+    return 'unknown';
+  }
+
+  const [localPart, domain] = value.split('@');
+  if (!localPart || !domain) {
+    return 'unknown';
+  }
+
+  return `${localPart.slice(0, 2)}***@${domain}`;
+};
+
 const signToken = (payload) => {
   const jwtSecret = process.env.JWT_SECRET;
 
@@ -165,8 +178,10 @@ const sendOTP = async (req, res, next) => {
 
     verifiedSignupStore.delete(normalizedEmail);
 
-    const smtpConfigured = Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
-    if (smtpConfigured) {
+    const emailProviderConfigured = Boolean(
+      process.env.RESEND_API_KEY || (process.env.SMTP_USER && process.env.SMTP_PASS)
+    );
+    if (emailProviderConfigured) {
       try {
         // Fail fast if SMTP hangs, so proxies don't return generic 504/502.
         await Promise.race([
@@ -184,6 +199,12 @@ const sendOTP = async (req, res, next) => {
           )
         ]);
       } catch (mailError) {
+        console.error('OTP email send failed', {
+          email: redactEmailAddress(normalizedEmail),
+          provider: process.env.RESEND_API_KEY ? 'resend' : 'smtp',
+          message: mailError.message
+        });
+
         return res.status(503).json({
           success: false,
           message:
@@ -194,7 +215,7 @@ const sendOTP = async (req, res, next) => {
       }
     } else {
       console.log(
-        `[Mock Email] SMTP not configured. OTP for ${normalizedEmail}: ${otp}`
+        `[Mock Email] No email provider configured. OTP for ${normalizedEmail}: ${otp}`
       );
     }
 
